@@ -15,11 +15,11 @@ const io = new Server(server, {
     }
 });
 
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true
-}));
+// app.use(cors({
+//     origin: "*",
+//     methods: ["GET", "POST"],
+//     credentials: true
+// }));
 
 app.get("/" , (req,res)=>{
     res.send("Hello world")

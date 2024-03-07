@@ -14,7 +14,7 @@ function App() {
 
   // const socket = useMemo(()=> io("http://localhost:7300"),[])
 
-  const socket = useMemo(()=> io("rigid-design-production.up.railway.app"),[])
+  const socket = useMemo(()=> io("https://socket-j2uy.vercel.app/"),[])
   
   useEffect(()=>{
     
