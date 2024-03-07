@@ -9,8 +9,8 @@ const server = createServer(app)
 
 const io = new Server(server, {
     cors: {
-        origin: "*"
-    }
+        origin: "https://socket-ergd-ive6esqf4-abhi5733.vercel.app/",
+      }
 });
 
 // app.use(cors({
