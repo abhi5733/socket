@@ -7,17 +7,14 @@ const app = express()
 
 const server = createServer(app)
 
-const io = new Server(server, {
-    cors: {
-        origin: "https://socket-ergd-ive6esqf4-abhi5733.vercel.app/",
-      }
-});
+const io = new Server(server);
 
 // app.use(cors({
 //     origin: "*",
 //     methods: ["GET", "POST"],
 //     credentials: true
 // }));
+app.use(cors())
 
 app.get("/" , (req,res)=>{
     res.send("Hello world")
