@@ -14,10 +14,10 @@ function App() {
 
   // const socket = useMemo(()=> io("http://localhost:7300"),[])
 
-  const socket = useMemo(()=> io("https://socket-j2uy.vercel.app/" , {
+  const socket = useMemo(()=> io("https://socket-one-omega.vercel.app/" , {
     withCredentials: true, 
     }),[])
-  
+    
   useEffect(()=>{
     
     socket.on("connect" , ()=>{
