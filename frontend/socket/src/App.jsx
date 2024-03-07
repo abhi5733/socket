@@ -11,9 +11,11 @@ function App() {
   const[room,setRoom] =useState("")
   const[data,setData] = useState([])
   const[group,setGroup] = useState("")
-  
-  const socket = useMemo(()=> io("http://localhost:7300"),[])
 
+  // const socket = useMemo(()=> io("http://localhost:7300"),[])
+
+  const socket = useMemo(()=> io("rigid-design-production.up.railway.app"),[])
+  
   useEffect(()=>{
     
     socket.on("connect" , ()=>{
