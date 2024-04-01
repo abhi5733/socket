@@ -363,15 +363,15 @@ const leaveGroup = ()=>{
 
 
 {/* Online Users */}
+{console.log(toggleActiveMembers)}
+{toggleActiveMembers==true &&  ( activeMembers.length-1>0 && Object.keys(info).length !==0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> :toggleActiveMembers==true?<Box> <Text mt={2}>No Active Members</Text> </Box>:""
 
-{(toggleActiveMembers==true &&  activeMembers.length-1>0) && Object.keys(info).length !==0? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> :toggleActiveMembers==true?<Box> <Text mt={2}>No Active Members</Text> </Box>:"hi"
-     }
+}
 
 
  {/* Friends List */}
 
- { (toggleFriendChat &&  Object.keys(info).length !== 0) && <Friends info={info} friends={friends} handleOnlineFriend={handleOnlineFriend}  setToggle={setToggle}  handleOfflineFriend={handleOfflineFriend} />
-
+{ (toggleFriendChat &&  Object.keys(info).length !== 0) && <Friends info={info} friends={friends} handleOnlineFriend={handleOnlineFriend}  setToggle={setToggle}  handleOfflineFriend={handleOfflineFriend} />
 
 }
 
