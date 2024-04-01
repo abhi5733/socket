@@ -1,6 +1,7 @@
 const { userRoomsModel, roomChatModel } = require("../model/Rooms");
 const { chatModel } = require("../model/chat");
 const { userModel } = require("../model/userModel");
+const cors = require("cors")
 let activeUsers = []  // storing all active users 
 const { Server } = require("socket.io")
 
