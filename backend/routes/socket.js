@@ -34,7 +34,8 @@ const io = new Server(server, {
 //     methods: ["GET", "POST"],
 //     credentials: true
 // }));
-// app.use(cors())
+
+app.use(cors())
 
 
 app.get("/", (req, res) => {
