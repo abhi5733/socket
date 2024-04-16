@@ -3,7 +3,7 @@ import React from 'react'
 
 const Navbar = () => {
   return (
-  <Box>
+  <Box w={"100%"}>
    <Flex h={"10vh"} p={5} alignItems={"center"} bgColor="yellow" ><Text fontSize={"30px"} fontFamily={"cursive"} >AbhiChat</Text></Flex>
 
   </Box>

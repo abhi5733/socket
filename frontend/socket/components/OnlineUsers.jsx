@@ -2,7 +2,7 @@ import { Box, Button, Flex , Text } from '@chakra-ui/react'
 import React from 'react'
 
 const OnlineUsers = ({toggleActiveMembers , activeMembers , info , friends , setDm , setId , setReceiver , getPreviousChats , setToggle}) => {
-  console.log("Online users")
+ 
   return <> {
     activeMembers.filter((el)=>{
   

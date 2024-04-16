@@ -1,13 +1,13 @@
 user login :
 
-1 : email : abhi@gmail.com
-    password :  abhi5733
+1 : username : abhijeet
+    password : abhijeet@5733
 
-2 :  email : abhi2411@gmail.com
-     password : abhi2411    
+ 2 :  username : kalvium
+     password : kalvium@5733    
 
-3 : email : masai@gmail.com
-    password : masai     
+<!-- 3 : email : masai@gmail.com
+    password : masai      -->
 
 
 

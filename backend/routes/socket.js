@@ -43,9 +43,11 @@ io.on("connection", async (socket) => {
     console.log("User Connected", socket.id)
 
 socket.on("user-connected" , (data)=>{
-  console.log(data , socket.id)
-  activeUsers.push({data, id:socket.id}) // storingsocket id for direct messaging 
-  console.log(activeUsers)
+  console.log(data , "data")
+//   activeUsers.push({data, id:socket.id})
+  activeUsers.length>0?(activeUsers = activeUsers.filter(el => el.data.name !== data.name),
+  activeUsers.push({ data, id: socket.id })):activeUsers.push({data, id:socket.id}) // storingsocket id for direct messaging 
+  console.log(activeUsers.filter((el)=>el.data.name!==data.name),"activeUsers")
 // emitting to entire circuit .
   io.emit("list-active-users" , activeUsers)    
 
@@ -61,12 +63,12 @@ socket.on("user-connected" , (data)=>{
 //  socket.emit("welcome" , `Welcome to the server ${socket.id}`)
  
 
-    //////////////////////////////////////////////// creating message event 
+    ////////////////////////////////////////////////  creating message event  ///////////////////////////////////////////////////////////////
 
     socket.on("message", async (data) => {
 
           // saving chat in roomchat collection 
-   
+   try{
            const newChat = roomChatModel({message : data.message ,
            senderId : data.info._id ,
            senderName : data.info.name , 
@@ -75,22 +77,21 @@ socket.on("user-connected" , (data)=>{
            await newChat.save()
            const rooms = await userRoomsModel.findOneAndUpdate({ roomName:data.group} , {$push:{chats:newChat._id}} , {new:true}).populate("chats")
            
-        // const room = await userRoomsModel.find({ roomName:data.group}).populate("chats")
-        // console.log(data.group , data.message)
-        // io.emit("messages", data.message)
-        // socket.broadcast.emit("tom" , data.message)
-        // io.to(data.group).emit("tom" , data.message)
-        socket.to(data.group).emit("message",{ data , rooms})
+      
+        socket.to(data.group).emit("message",{success:true,  data , rooms})
 
  
    // pushing chat id in room  model 
 
         
         console.log(rooms)
+   }catch(err){
+
+   }
 
     })
 
-///////////////////////////////////////////////// Direct message to user 
+/////////////////////////////////////////////////   Direct message to user  ////////////////////////////////////////////////////////////////////////
 
 
   socket.on("dm" , async (data)=>{
@@ -178,35 +179,36 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
 
 
 
-    //////////////////////////////////////////////////////  join the room 
+    //////////////////////////////////////////////////////  join the room   /////////////////////////////////////////////////////////////////
 
     socket.on("join-room", async ({group , info}) => {
 
         try{
         
-        console.log(group , info) 
+        // console.log(group ) 
        
-const rooms = await userRoomsModel.find({ roomName:group}).populate("chats")  //checking if group already exists
+const rooms = await userRoomsModel.findOne({ roomName:group}).populate("chats")  //checking if group already exists
+
  const user = await userModel.find({_id:info._id})  // getting user details 
 
 // if group already exists
 
-if(rooms.length>0){
+if( rooms!==null){
      
 // if already part of group
 
-if(rooms[0].members.includes(info._id)){
+if(rooms.members.includes(info._id)){
 socket.join(group)
-socket.emit("join-room-response", { success: true, message: "You are already part of room" , rooms });
+socket.emit("join-room-response", { success: true, message: "You are already part of room" , rooms});
    
 }else{
 
  //  if not part of group 
 
-     user[0].rooms.push(rooms[0]._id)   // pushing id of group inside user
+     user[0].rooms.push(rooms._id)   // pushing id of group inside user
     await user[0].save()
-    rooms[0].members.push(user[0]._id)  // pushing id of user into group 
-    await rooms[0].save()
+    rooms.members.push(user[0]._id)  // pushing id of user into group 
+    await rooms.save()
     socket.join(group)
     socket.emit("join-room-response", { success: true, message: "Room exists and you have been added" , rooms });
   
@@ -243,7 +245,7 @@ socket.join(group)
 
 
 
-    ////////////////////////////////////////// leaving the room
+    //////////////////////////////////////////////////////////// leaving the room  /////////////////////////////////////////////////////////////////////
 
 
     socket.on("beforeDisconnect" , async ({group , info})=>{
@@ -280,7 +282,7 @@ socket.join(group)
 
 
 
-///////////////////////////////////////////////  disconnecting the socket 
+///////////////////////////////////////////////  disconnecting the socket  //////////////////////////////////////////////////////////////////////
 
 socket.on("disconnect", () => {
         

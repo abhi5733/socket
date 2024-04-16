@@ -103,6 +103,7 @@ const friends = []
 
     // gettin data of active users
     socket.on("list-active-users" , (data)=>{
+      console.log(data)
       setActiveMembers(data)
     })
 
@@ -135,9 +136,11 @@ const friends = []
     ////////////////////////////////////
     socket.on("join-room-response" , (msg)=>{
       if(msg.success){
- console.log(msg.rooms[0].chats,msg)
+       
+        console.log(msg)
+ console.log(msg.rooms.chats,msg)
    setNewRoom(false)  // setting it to false 
-      setData(msg.rooms[0].chats) , setRoomInfo(msg.rooms[0])  // setting the room chats info 
+      setData(msg.rooms.chats ) , setRoomInfo(msg.rooms )  // setting the room chats info 
       toast({
         title: ` ${group} Room joined`,
         description: "Welcome to the Room",
@@ -147,6 +150,7 @@ const friends = []
         position: 'top'
       })
     }else{
+      console.log(msg)
       toast({
         title: `Unable to join room currently`,
         description: "Try again later",
@@ -189,6 +193,16 @@ console.log(data)
 }
 
 
+const handleSpecialCase = ()=>{
+
+  setToggleActiveMembers((prev)=>!prev) 
+   setToggleFriendChat(false) 
+   setToggleRoomChat(false)
+  setToggleActiveRooms(false) 
+
+  // console.log(toggleActiveMembers)
+}
+
 // /////////////////////////////
 // const getAllRoomsUser = (name)=>{
 //   console.log(group)
@@ -208,11 +222,20 @@ console.log(data)
 
 const joinRoom = (RoomName)=>{
  
-  // console.log(group,info)
+   if(RoomName!==""  || group!==""){
   let groups =  RoomName || group
   socket.emit( "join-room" , ({group:groups, info}) )
- 
-}
+   }else{
+    toast({
+      title: `Please enter Proper Room-name`,
+      description: "Try later",
+      status: 'error',
+      duration: 2000,
+      isClosable: true,
+      position: 'top'
+    }) }
+   }
+
 
 
 
@@ -340,17 +363,47 @@ const leaveGroup = ()=>{
     <Box> 
 
 
-<Flex   justifyContent={"center"}  >
+<Flex   justifyContent={"center"}   >
 
-<Box color={"white"}   display={toggle==true?"none":"block"} width={toggle==true?"30vw":"auto"} >
-<Box   bgColor={toggle==true?"gray":"gray"} p={5}  borderRadius={toggle==true?"0px":"10px"}   margin={toggle==true?"block":"auto"} mt={10} >  
+<Box color={"white"}   display={toggle==true?"none":"block"}  width={toggle==true?"30vw":[  "80vw", "100vw" , "60vw" , "50vw"]} >
+<Box   bgColor={toggle==true?"gray":"gray"} p={5}  borderRadius={toggle==true?"0px":"10px"} w={["100%" , "90%","auto" , "auto"]}  margin={toggle==true?"block":"auto"} mt={10} >  
 <Heading textAlign={'center'} >Welcome   {info.name} </Heading>
 
-<Flex mt={10} justifyContent={"space-around"} >
-<Button onClick={()=>{setToggleFriendChat((prev)=>!prev) , setToggleRoomChat(false) , setNewRoom(false) , setToggleActiveMembers(false) ,setToggleActiveRooms(false)}} >Chat with Friends</Button>
-<Button ml={2} onClick={()=>{setToggleRoomChat((prev)=>!prev), setToggleFriendChat(false) , setToggleActiveMembers(false) , setToggleActiveRooms(false) }} >My Room</Button>
-<Button ml={2} onClick={()=>{setToggleActiveMembers((prev)=>!prev) , setToggleFriendChat(false) ,setToggleRoomChat(false) ,  setToggleActiveRooms(false),console.log(toggleActiveMembers)}} >Online Users</Button>
-<Button ml={2} onClick={getAllRooms}>All Rooms</Button>
+<Flex mt={10} flexDirection={["column" , "row" , "row" , "row"]}  justifyContent={"space-around"} >
+<Button  onClick={()=>{setToggleFriendChat((prev)=>!prev) , setToggleRoomChat(false) , setNewRoom(false) , setToggleActiveMembers(false) ,setToggleActiveRooms(false)}} bgColor={toggleFriendChat?"yellow":"white"}   >Chat with Friends</Button>
+ {/* Friends List for mobile view */}
+
+ <Box  display={["block" , "none" , "none" ,"none"]}  >  { toggleFriendChat &&  ( info.friends.length > 0 ? <Friends info={info} friends={friends} handleOnlineFriend={handleOnlineFriend}  setToggle={setToggle}  handleOfflineFriend={handleOfflineFriend} />:<Text mt={2}>No Friends Yet</Text>)
+
+} </Box> 
+
+<Button ml={[ 0,2,2 ,2]}  mt={[2,0,0,0]} onClick={()=>{setToggleRoomChat((prev)=>!prev), setToggleFriendChat(false) , setToggleActiveMembers(false) , setToggleActiveRooms(false) }} bgColor={toggleRoomChat?"yellow":"white"} >My Room</Button>
+
+{/* My rooms  and New Rooms section for mobile view */}
+
+ <Box display={["block" , "none" , "none" ,"none"]}> {(toggleRoomChat &&  Object.keys(info).length !== 0) && <MyRooms info={info} group={group}  setGroup={setGroup}  joinRoom={joinRoom} setToggle={setToggle}  newRoom={newRoom}   setNewRoom={setNewRoom}  /> } </Box> 
+
+
+<Button ml={[ 0,2,2 ,2]}  mt={[2,0,0,0]}  onClick={handleSpecialCase}
+ bgColor={toggleActiveMembers?"yellow":"white"} >Online Users</Button>
+
+{/* Online Users for mobile view */}
+{console.log(activeMembers)}
+<Box display={["block" , "none" , "none" ,"none"]}> {(toggleActiveMembers && activeMembers.length-1 > 0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> : toggleActiveMembers ? <Box> <Text mt={2}>No Active Members</Text> </Box>:<> {console.log(activeMembers)} </>
+
+}  </Box> 
+  
+<Button ml={[ 0,2,2 ,2]}  mt={[2,0,0,0]}  onClick={getAllRooms} bgColor={toggleActiveRooms?"yellow":"white"} >All Rooms</Button>
+
+{/* All rooms available for mobile view */}
+
+ <Box display={["block" , "none" , "none" ,"none"]}>  {toggleActiveRooms &&   allRooms.length>0?allRooms.map((el)=>{
+  return <Flex key={el._id} alignItems={"center"} >
+<Text fontSize={20} >RoomName : {el.roomName}</Text>
+<Button ml={2} size={"xs"} onClick={()=>{setToggle(true) ,setGroup(el.roomName),joinRoom(el.roomName)}}>Join</Button>
+  </Flex>
+}): toggleActiveRooms?<Text mt={2}>No Room Yet</Text>:""} </Box>
+
 </Flex>
 
 
@@ -358,35 +411,36 @@ const leaveGroup = ()=>{
 
  <HelperOnlineuser activeMembers={activeMembers} info={info} friends={friends} />
 
+ {/* Friends List */}
 
+ <Box display={["none" , "block" , "block" ,"block"]} > { toggleFriendChat &&  ( info.friends.length > 0 ? <Friends  info={info} friends={friends} handleOnlineFriend={handleOnlineFriend}  setToggle={setToggle}  handleOfflineFriend={handleOfflineFriend} />:<Text mt={2}>No Friends Yet</Text>)
+
+} </Box> 
 
 
 
 {/* Online Users */}
 
-{toggleActiveMembers==true &&  ( activeMembers.length-1>0 && Object.keys(info).length !==0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> :toggleActiveMembers==true?<Box> <Text mt={2}>No Active Members</Text> </Box>:""
+<Box display={["none" , "block" , "block" ,"block"]} > {toggleActiveMembers==true &&  ( activeMembers.length-1>0 && Object.keys(info).length !==0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> :toggleActiveMembers==true?<Box> <Text mt={2}>No Active Members</Text> </Box>:""
 
-}
+} </Box> 
 
 
- {/* Friends List */}
 
-{ toggleFriendChat &&  ( info.friends.length > 0 ? <Friends info={info} friends={friends} handleOnlineFriend={handleOnlineFriend}  setToggle={setToggle}  handleOfflineFriend={handleOfflineFriend} />:<Text mt={2}>No Friends Yet</Text>)
-
-}
 
 {/* My rooms  and New Rooms section */}
 
-{(toggleRoomChat &&  Object.keys(info).length !== 0) && <MyRooms info={info} group={group}  setGroup={setGroup}  joinRoom={joinRoom} setToggle={setToggle}  newRoom={newRoom}   setNewRoom={setNewRoom}  /> }
+<Box display={["none" , "block" , "block" ,"block"]} > {(toggleRoomChat &&  Object.keys(info).length !== 0) && <MyRooms info={info} group={group}  setGroup={setGroup}  joinRoom={joinRoom} setToggle={setToggle}  newRoom={newRoom}   setNewRoom={setNewRoom}  /> } </Box> 
 
 {/* All rooms available */}
-
+<Box display={["none" , "block" , "block" ,"block"]} > 
 {toggleActiveRooms && allRooms.map((el)=>{
-  return <Flex alignItems={"center"} >
+  return <Flex key={el._id} alignItems={"center"} >
 <Text fontSize={20} >RoomName : {el.roomName}</Text>
 <Button ml={2} size={"xs"} onClick={()=>{setToggle(true) ,setGroup(el.roomName),joinRoom(el.roomName)}}>Join</Button>
   </Flex>
 })  }
+</Box>
 
 </Box> 
 
@@ -400,19 +454,22 @@ const leaveGroup = ()=>{
 
 {/* Direct message */}
 <Button  top={2} left={2}  bgColor={"yellow"} pos={"absolute"} onClick={()=>{setToggle(false), setDm(false) }} >Go Back</Button>
+
+
 { !dm && <Button  top={2} left={120}  bgColor={"yellow"} pos={"absolute"} onClick={leaveGroup}  >Exit Group</Button>}
+
 {dm==true?<Box h={"80vh"} overflow={"scroll"} > 
 
 
   {dmtext.length>0 && dmtext.map((el)=>{
 
- return <Box key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box w={"50%"} bgColor={el.name==info.name?"green":"blue"} p={5} borderRadius={"20px"}  ><Text> {el.name==info.name?"You":el.name}</Text> <Text> {el.message}</Text> </Box>  </Box>  
+ return <Box border={"1px solid black"} key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box border={"1px solid black"}  w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={el.name==info.name?"green":"blue"} p={5} borderRadius={"20px"}  ><Text> {el.name==info.name?"You":el.name}</Text> <Text> {el.message}</Text> </Box>  </Box>  
 })}
 
   
 </Box>:<Box h={"80vh"} overflow={"scroll"} > {data.length  >0 && data.map((el, ind)=>{
   
-return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box w={"50%"} bgColor={(el.name || el.senderName)==info.name?"green":"blue"} p={5} borderRadius={"20px"}  ><Text> {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> <Text> {el.message}</Text> </Box>  </Box>  
+return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={(el.name || el.senderName)==info.name?"green":"blue"} p={5} borderRadius={"20px"}  ><Text> {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> <Text> {el.message}</Text> </Box>  </Box>  
   })}</Box>}
 
 {/* Message Box */} 

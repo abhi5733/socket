@@ -16,10 +16,10 @@ const MyRooms = ({info , setGroup , joinRoom , setToggle , newRoom ,  setNewRoom
         }) }
         
        {newRoom &&  <Box mt={5}>
-        <Input type='text'  color="gray" bgColor={"white"} placeholder='Enter Room Name'  value={room} w={"50%"} onChange={(e)=>{setRoom(e.target.value),setGroup(e.target.value)}} /> <br></br>
+        <Input type='text'  color="gray" bgColor={"white"} placeholder='Enter Room Name'  value={room} w={[ "80%" , "80%" , "50%" ,  "50%"]} onChange={(e)=>{setRoom(e.target.value),setGroup(e.target.value)}} /> <br></br>
         <Flex mt={5} w={"20%"} justifyContent={"space-between"}  > 
-        <Button size={"xs"} onClick={()=>{joinRoom(room);setToggle((prev)=>!prev);setRoom("")}} >Join</Button>
-        <Button size={"xs"} onClick={()=>setNewRoom(false)} >Back</Button>
+        <Button size={["sm","xs","xs","xs"]} onClick={()=>{joinRoom(room);setToggle((prev)=>!prev);setRoom("")}} >Join</Button>
+        <Button size={["sm","xs","xs","xs"]} ml={[2,0,0,0]} onClick={()=>setNewRoom(false)} >Back</Button>
         </Flex>
       </Box>  }
          { !newRoom && <Button  size={"xs"} mt={5}  onClick={()=> setNewRoom(true)} >Join New Room</Button> }
@@ -29,8 +29,8 @@ const MyRooms = ({info , setGroup , joinRoom , setToggle , newRoom ,  setNewRoom
           {newRoom &&  <Box mt={5}>
         <Input type='text'  color="gray" bgColor={"white"} placeholder='Enter Room Name'  value={room} w={"50%"} onChange={(e)=>{setRoom(e.target.value),setGroup(e.target.value)}} /> <br></br>
         <Flex mt={5} w={"20%"} justifyContent={"space-between"}  > 
-        <Button size={"xs"} onClick={()=>{joinRoom(room);setToggle((prev)=>!prev);setRoom("")}} >Join</Button>
-        <Button size={"xs"} onClick={()=>setNewRoom(false)} >Back</Button>
+        <Button size={["sm","xs","xs","xs"]} onClick={()=>{joinRoom(room);setToggle((prev)=>!prev);setRoom("")}} >Join</Button>
+        <Button size={["sm","xs","xs","xs"]} ml={[2,0,0,0]} onClick={()=>setNewRoom(false)} >Back</Button>
         </Flex>
       </Box>  }
           { !newRoom && <Button  size={"xs"} mt={5}  onClick={()=> setNewRoom(true)} >Join  Room</Button> }

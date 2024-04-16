@@ -56,10 +56,10 @@ const Signup = () => {
   
 <Box  mt={5}  >
 
-<Text fontSize={"30px"} textAlign={"center"} fontFamily={"cursive"} >Signup</Text>
-<Box width={"400px"} margin={"auto"} boxShadow='2xl' borderRadius={"10px"} mt={10} bgColor={"gray"}  > 
-<form onSubmit={handleSubmit(onSubmit)} style={{ width: "400px", margin: "auto", padding: "10px" }}>
-      <FormLabel>Name</FormLabel>
+<Text fontSize={"30px"} textAlign={"center"} fontFamily={"cursive"}  >Signup</Text>
+<Box width={["80%","400px","400px","400px"]} margin={"auto"} boxShadow='2xl' borderRadius={"10px"} mt={10} bgColor={"gray"}  > 
+<form onSubmit={handleSubmit(onSubmit)} style={{ margin: "auto", padding: "10px" }}>
+      <FormLabel fontWeight={"bold"} fontSize={[ "medium" , "medium" , "large" ,   "large"]}  color={"white"}  >Name</FormLabel>
       <Input
         {...register("name" , {
           required: {
@@ -67,11 +67,13 @@ const Signup = () => {
             message : "This field is required*"
           } , 
           minLength:6,
+        
         })}
         type='text'
         placeholder='Enter Name'
         style={{ width: "90%", padding: "3px" }}
         name="name"
+        bgColor={"white"}
   
       />
     
@@ -80,12 +82,13 @@ const Signup = () => {
         <Text color={"yellow"}>Minimum length is 6 characters</Text>
       )}
 
-      <FormLabel>Email</FormLabel>
+      <FormLabel fontWeight={"bold"} fontSize={[ "medium" , "medium" , "large" ,   "large"]} color={"white"}  >Email</FormLabel>
       <Input
         type='email'
         placeholder='Enter Email'
         style={{ width: "90%", padding: "3px" }}
         name="email"
+        bgColor={"white"}
         {...register("email" , {
           required: {
             value : true,
@@ -105,12 +108,13 @@ const Signup = () => {
   <Text>Please enter a valid email address</Text>
 )}
 
-      <FormLabel>Password</FormLabel>
+      <FormLabel fontWeight={"bold"} fontSize={[ "medium" , "medium" , "large" ,   "large"]} color={"white"} >Password</FormLabel>
       <Input
         type='password'
         placeholder='Enter password'
         style={{ width: "90%", padding: "3px" }}
         name="password"
+        bgColor={"white"}
         {...register("password" , {
           required: {
             value : true,
@@ -125,13 +129,13 @@ const Signup = () => {
             message: "Password must contain at least one number and one special character"
           }
         })}
-   
+      
       />
       {errors.password &&  <Text color={"yellow"}> {errors.password.message} </Text>  }
 
-      <Button type='submit' style={{ marginTop: "10px", backgroundColor: "yellow", color: "brown" }}>Submit</Button >
-      <Link to="/login" style={{ textDecoration: 'none' }}>
-        <Button ml={2} type="button" style={{ marginTop: "10px", backgroundColor: "yellow", color: "brown" }}>Login Directly</Button >
+      <Button type='submit'  marginTop= "10px" backgroundColor= "white" color= "black"  _hover ={{backgroundColor:"yellow", color:"black"}} >Submit</Button >
+      <Link to="/login" style={{ textDecoration: 'none' }}> 
+        <Button ml={2} type="button" marginTop= "10px" backgroundColor= "white" color= "black"  _hover ={{backgroundColor:"yellow", color:"black"}}  >Login Directly</Button >
       </Link>
     </form>
 </Box>

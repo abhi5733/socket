@@ -53,15 +53,15 @@ const navigate = useNavigate()
 
     <Text fontSize={"30px"} textAlign={"center"} fontFamily={"cursive"} mt={"20px"}>Login</Text>
 
-<Box width={"400px"} margin={"auto"} boxShadow='2xl' borderRadius={"10px"} mt={10} bgColor={"gray"} p={2} > 
+<Box width={["80%","400px","400px","400px"]} margin={"auto"} boxShadow='2xl' borderRadius={"10px"} mt={10} bgColor={"gray"} p={2} > 
 <form  onSubmit={handleSubmit} >
 
-<FormLabel>UserName</FormLabel>
+<FormLabel fontWeight={"bold"} fontSize={[ "medium" , "medium" , "large" ,   "large"]}  color={"white"}>UserName</FormLabel>
 <input type='text' placeholder='Enter UserName'  style={{width:"90%" , padding:"0 2px"}}  value={state.name} name="name"  onChange={handleChange} /> <br/>
-<FormLabel mt={2}>Password</FormLabel> 
+<FormLabel mt={2} fontWeight={"bold"} fontSize={[ "medium" , "medium" , "large" ,   "large"]}  color={"white"}>Password</FormLabel> 
 <input type='password' placeholder='Enter password'  style={{width:"90%" ,  padding:"0 2px"}}  value={state.password} name="password"  onChange={handleChange} />
-<Button type='submit' mt={2} bgColor={"yellow"} color={"brown"} >Submit</Button>
- <Link to="/" ><Button  mt={2} ml={5} bgColor={"yellow"} color={"brown"} >Sign up</Button> </Link>
+<Button type='submit' mt={2} backgroundColor= "white" color= "black"  _hover ={{backgroundColor:"yellow", color:"black"}}  >Submit</Button>
+ <Link to="/" ><Button  mt={2} ml={5} backgroundColor= "white" color= "black"  _hover ={{backgroundColor:"yellow", color:"black"}}  >Sign up</Button> </Link>
 </form>
 
 </Box>

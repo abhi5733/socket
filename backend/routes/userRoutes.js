@@ -12,7 +12,7 @@ userRouter.post("/signup" , async(req,res)=>{
     try{
         const prevUser = await userModel.findOne({name:req.body.name})
 
-        if(prevUser){
+        if(prevUser){ // username is unique
             res.status(409).send({"msg":"UserName already Exists"})
 
         }else{
