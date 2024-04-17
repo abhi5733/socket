@@ -95,7 +95,7 @@ console.log(err)
 
 
   socket.on("dm" , async (data)=>{
-console.log(data)
+console.log(data,"data")
  const session = await userModel.startSession()
  session.startTransaction();
 
@@ -114,6 +114,7 @@ console.log(data)
     if(user.friends.some(friend => friend.id === data.user._id)){
 const users = user.friends.filter(friend => friend.id === data.user._id)
 
+    // updating the chat model with new chat
         const text =  await chatModel.findByIdAndUpdate(users[0].chat , { $push: { chats: {message:data.text , sender:data.user._id , name:data.user.name }} } , {new:true ,   session } )
   
         socket.to(data.id).emit("dm" ,{text:data.text,id:data.user._id,name:data.user.name , success:true})
@@ -134,6 +135,7 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
 
 }else{ // if offline
 
+    // if already friends 
     if(user.friends.some(friend => friend.id === data.user._id)){
         const users = user.friends.filter(friend => friend.id === data.user._id)
         

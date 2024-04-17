@@ -1,8 +1,8 @@
 import { Box, Button, Flex , Text } from '@chakra-ui/react'
 import React from 'react'
 
-const OnlineUsers = ({toggleActiveMembers , activeMembers , info , friends , setDm , setId , setReceiver , getPreviousChats , setToggle}) => {
- 
+const OnlineUsers = ({toggleActiveMembers , activeMembers , info , friends , setDm , setId , setReceiver , getPreviousChats , setToggle ,  setReceiverName }) => {
+
   return <> {
     activeMembers.filter((el)=>{
   
@@ -19,7 +19,7 @@ const OnlineUsers = ({toggleActiveMembers , activeMembers , info , friends , set
         // console.log(el)
           return <Flex key={el._id} mt={2} alignItems={"center"}>
             <Text fontSize={20}>Name : {el.data.name}</Text>
-          <Button ml={2} size={"xs"} onClick = {()=>{setDm((prev)=>!prev),setId(el.id),setReceiver(el.data._id), getPreviousChats(el.data._id) , setToggle((prev)=>!prev)}} >Message</Button>
+          <Button ml={2} size={"xs"} onClick = {()=>{setDm((prev)=>!prev) /*,setId(el.id) */     ,   setReceiverName(el.data.name),  setReceiver(el.data._id), getPreviousChats(el.data._id) , setToggle((prev)=>!prev)}} >Message</Button>
           </Flex>
         })
      } </>

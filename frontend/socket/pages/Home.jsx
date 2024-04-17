@@ -24,7 +24,7 @@ const[roomInfo,setRoomInfo] = useState({roomName:"123"})
 const[activeMembers , setActiveMembers] = useState([])
 const[dm,setDm] = useState(false)
 const[text,setText] = useState("")  // direct message 
-const[id,setId] = useState("")  
+const[id,setId] = useState("")     // setting socket id for direcct messages 
 const[userId,setUserId] = useState("")
 const[dmtext,setDmtext]  = useState([])
 const[receiver,setReceiver] = useState("")  // setting id of receiver
@@ -38,6 +38,7 @@ const[newRoom , setNewRoom] = useState(false)
 const[toggleActiveMembers,setToggleActiveMembers] = useState(false)
 const[toggleActiveRooms,setToggleActiveRooms] = useState(false)
 const[allRooms , setAllRooms] = useState([])
+const[receiverName,setReceiverName] = useState("")
 const friends = []
 
 
@@ -212,11 +213,16 @@ const friends = []
 
 
   ////////////////////////////////// personnal messgaes
-  const handleText = (id,text)=>{
-// console.log(id,text)
+  const handleText = (text)=>{
+console.log(activeMembers)
+let data ; 
+  activeMembers.length>0?data = activeMembers.filter((el)=>el.data.name==receiverName):""
+  let id = data.length>0?data[0].id : "" 
+
+// console.log(id,text,info,receiver)
     socket.emit("dm" , ({id,text,user:info,receiver}))
     setDmtext((prev)=>[...prev,{message:text,receiver:info.name,name:info.name}])
-    console.log(dmtext)
+  //   console.log(dmtext)
   setText("")
 }
 
@@ -291,12 +297,12 @@ console.log(2)
 //  handling online friend 
 const handleOnlineFriend = (name)=>{
 
-  
+  setReceiverName(name)
    const user = activeMembers.filter((el)=>el.data.name==name) 
 // console.log(user[0].data._id , activeMembers)
   setDm((prev)=>!prev) 
   if(user.length>0){
-  setId(user[0].id)  // setting socket id 
+   /*setId(user[0].id) */  // setting socket id 
   setReceiver(user[0].data._id)  // setting Receivers  ID
   getPreviousChats(user[0].data._id)
   console.log(user[0].data._id)
@@ -307,9 +313,10 @@ const handleOnlineFriend = (name)=>{
 
 
 // handle Offline friend 
-const handleOfflineFriend = (id)=>{
-
+const handleOfflineFriend = (id,name)=>{
+setReceiverName(name)
   // console.log(id)
+  setId("") // setting socket id to emty string 
   setReceiver(id) // setting the receivers id 
   setDm((prev)=>!prev) 
   getPreviousChats(id)
@@ -446,7 +453,7 @@ const leaveGroup = ()=>{
 
 {/* Online Users */}
 
-<Box display={["none" , "block" , "block" ,"block"]} > {toggleActiveMembers==true &&  ( activeMembers.length-1>0 && Object.keys(info).length !==0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> :toggleActiveMembers==true?<Box> <Text mt={2}>No Active Members</Text> </Box>:""
+<Box display={["none" , "block" , "block" ,"block"]} > {toggleActiveMembers==true &&  ( activeMembers.length-1>0 && Object.keys(info).length !==0 )? <OnlineUsers  setReceiverName={setReceiverName} toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> :toggleActiveMembers==true?<Box> <Text mt={2}>No Active Members</Text> </Box>:""
 
 } </Box> 
 
@@ -504,7 +511,7 @@ return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} 
 <Box backgroundColor={"yellow"} pos={"absolute"}  bottom={0} w={"100%"} p={2} h={"10vh"}  >
   <Flex alignItems={"center"} > 
   <Input type="text" bgColor={"gray"} value={dm==true?text:message} cursor={"pointer"} color={"white"}  placeholder="enter message" w={"80%"}  onChange={(e)=> dm==true?setText(e.target.value):setMessage(e.target.value)} />
-  <Button ml={5} onClick={()=>dm==true?handleText(id,text):handleSubmit()}>Message</Button>
+  <Button ml={5} onClick={()=>dm==true?handleText(text):handleSubmit()}>Message</Button>
   </Flex>
 </Box>
 

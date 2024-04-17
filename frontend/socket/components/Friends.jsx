@@ -6,7 +6,7 @@ const Friends = ({info , friends , handleOnlineFriend , setToggle , handleOfflin
 
 return <Flex key={el.id} mt={2} alignItems={"center"} >
   <Text fontSize={20}  >Name : {el.name}</Text>
-  {friends.includes(el.name)?<Button ml={2} size={"xs"} onClick={()=>{handleOnlineFriend(el.name), setToggle(true)}} >On-line</Button>:<Button  ml={2} size={"xs"}  onClick={()=>{handleOfflineFriend(el.id) , setToggle(true)}} >Message</Button>}
+  {friends.includes(el.name)?<Button ml={2} size={"xs"} onClick={()=>{handleOnlineFriend(el.name), setToggle(true)}} >On-line</Button>:<Button  ml={2} size={"xs"}  onClick={()=>{ handleOfflineFriend(el.id,el.name) , setToggle(true)}} >Message</Button>}
   
 </Flex>
 }) }
