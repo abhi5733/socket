@@ -7,6 +7,10 @@ const nodemailer = require("nodemailer");
 const userRouter = express.Router()
 
 
+
+///////////////////////////////////////////// signup Route  ///////////////////////////////////////////////////////
+
+
 userRouter.post("/signup" , async(req,res)=>{
 
     try{
@@ -33,6 +37,8 @@ userRouter.post("/signup" , async(req,res)=>{
 
 })
 
+
+///////////////////////////////////////////////////////  Login Route  /////////////////////////////////////////////////////
 
 userRouter.post("/login" , async(req,res)=>{
 
@@ -64,62 +70,62 @@ if(User.length>0){
 
 
 
-// Creating the User for  testing refrencing  
+// // Creating the User for  testing refrencing  
 
-userRouter.post("/newuser" , async (req,res)=>{
+// userRouter.post("/newuser" , async (req,res)=>{
 
-    try{
+//     try{
 
-        const user =  User(req.body)
-         await user.save()
-         res.send({"msg":"User created successfully" , user})
-    }catch(err){
+//         const user =  User(req.body)
+//          await user.save()
+//          res.send({"msg":"User created successfully" , user})
+//     }catch(err){
 
-        res.send(err)
+//         res.send(err)
 
-    }
-
-
-})
-
- // creating new comment always 
-
- userRouter.post("/comment" , async (req,res)=>{
-
-    try{
-
-        const newMsg =  Comment(req.body)
-         await newMsg.save()
-         res.send({"msg":"User created successfully" , newMsg})
-    }catch(err){
-
-        res.send(err)
-
-    }
+//     }
 
 
-})
+// })
+
+//  // creating new comment always 
+
+//  userRouter.post("/comment" , async (req,res)=>{
+
+//     try{
+
+//         const newMsg =  Comment(req.body)
+//          await newMsg.save()
+//          res.send({"msg":"User created successfully" , newMsg})
+//     }catch(err){
+
+//         res.send(err)
+
+//     }
+
+
+// })
 
 
  
 
- userRouter.get('/users/:userId/comments', async (req, res) => {
-    console.log(req.params.userId)
-    try {
-        const user = await User.findById(req.params.userId).populate('comments');
-        res.send(user);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+//  userRouter.get('/users/:userId/comments', async (req, res) => {
+//     console.log(req.params.userId)
+//     try {
+//         const user = await User.findById(req.params.userId).populate('comments');
+//         res.send(user);
+//     } catch (error) {
+//         res.status(500).send(error);
+//     }
+// });
 
 
-userRouter.get("/cookie" , (req,res)=>{
+// userRouter.get("/cookie" , (req,res)=>{
 
-        res.cookie("key", "abhi") ;
-        res.send('Cookie set successfully');
+//         res.cookie("key", "abhi") ;
+//         res.send('Cookie set successfully');
 
-})
+// })
 
 
 

@@ -112,7 +112,8 @@ const Signup = () => {
       <Input
         type='password'
         placeholder='Enter password'
-        style={{ width: "90%", padding: "3px" }}
+       width= "90%"
+        padding =  "3px"
         name="password"
         bgColor={"white"}
         {...register("password" , {

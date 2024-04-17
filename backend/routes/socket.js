@@ -76,17 +76,17 @@ socket.on("user-connected" , (data)=>{
          })
            await newChat.save()
            const rooms = await userRoomsModel.findOneAndUpdate({ roomName:data.group} , {$push:{chats:newChat._id}} , {new:true}).populate("chats")
-           
-      
-        socket.to(data.group).emit("message",{success:true,  data , rooms})
-
+           console.log("emit-response")
+    
  
+        socket.to(data.group).emit("message",{success:true,  data , rooms})
+              socket.emit("Room-response" , { success:true } )
    // pushing chat id in room  model 
 
         
         console.log(rooms)
    }catch(err){
-
+console.log(err)
    }
 
     })

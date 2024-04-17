@@ -85,9 +85,9 @@ const friends = []
           isClosable: true,
           position: 'top'
         })
-        console.log(data,info)
+        // console.log(data,info)
         setDmtext((prev)=>[...prev , {message:data.text,receiver:data.name,name:data.name} ])
-        console.log(dmtext)
+        // console.log(dmtext)
       setText("")
         setUserId(data.id)
       }
@@ -126,31 +126,69 @@ const friends = []
     })
 
 
-    ///////////////////////////////////
+    ///////////////////////////////////  receiving group messages from other users
     socket.on("message" , (data)=>{
-      console.log(data)
-      setData((prev)=>[...prev, {message:data.data.message , name : data.data.info.name}])
+    
+        console.log(data)
+        setData((prev)=>[...prev, {message:data.data.message , name : data.data.info.name}])
+        toast({
+          title: `New message received`,
+          status: 'success',
+          duration: 500,
+          isClosable: true,
+          position: 'top'
+        })
+
+      
+  
+    })
+
+    // Group message sent success to the individual user . 
+
+    socket.on("Room-response" , (data)=>{
+    
+      if(data.success){
+        // console.log(data)
+      toast({
+        title: `Message sent successfully`,
+        status: 'success',
+        duration: 500,
+        isClosable: true,
+        position: 'top'
+      })
+      setMessage("")
+      }else{
+
+        toast({
+          title: `Error in sending message`,
+          status: 'error',
+          duration: 500,
+          isClosable: true,
+          position: 'top'
+        })
+
+      }
     })
 
 
     ////////////////////////////////////
     socket.on("join-room-response" , (msg)=>{
       if(msg.success){
-       
+        setToggle(true)
         console.log(msg)
- console.log(msg.rooms.chats,msg)
+//  console.log(msg.rooms.chats,msg)
    setNewRoom(false)  // setting it to false 
       setData(msg.rooms.chats ) , setRoomInfo(msg.rooms )  // setting the room chats info 
       toast({
-        title: ` ${group} Room joined`,
-        description: "Welcome to the Room",
+        title: ` ${msg.rooms.roomName} Room joined`,
+        description: `${msg.message}`,
         status: 'success',
         duration: 2000,
         isClosable: true,
         position: 'top'
       })
     }else{
-      console.log(msg)
+      // console.log(msg)
       toast({
         title: `Unable to join room currently`,
         description: "Try again later",
@@ -175,7 +213,7 @@ const friends = []
 
   ////////////////////////////////// personnal messgaes
   const handleText = (id,text)=>{
-console.log(id,text)
+// console.log(id,text)
     socket.emit("dm" , ({id,text,user:info,receiver}))
     setDmtext((prev)=>[...prev,{message:text,receiver:info.name,name:info.name}])
     console.log(dmtext)
@@ -189,7 +227,7 @@ const handleSubmit = ()=>{
   // console.log(message,group , info)
   socket.emit("message" , ({message,group, info }))
   setData((prev)=>[...prev, {message, name:info.name}])
-console.log(data)
+// console.log(data)
 }
 
 
@@ -203,18 +241,6 @@ const handleSpecialCase = ()=>{
   // console.log(toggleActiveMembers)
 }
 
-// /////////////////////////////
-// const getAllRoomsUser = (name)=>{
-//   console.log(group)
-  
-//    axios.get(`http://localhost:7300/admin/roomUsers/${name}` , {
-//     headers:{
-//       auth : localStorage.getItem("token")
-//   }
-//    }).then((res)=>{ setActiveMembers(res.data.members)})
-//    .catch((err)=>console.log(err))
-
-// }
 
 
 
@@ -243,9 +269,9 @@ const joinRoom = (RoomName)=>{
 const  getPreviousChats = async (id)=>{
 
   const user = info.friends.filter((el)=>el.id==id)
-console.log(user)
+// console.log(user)
   if(user.length>0){
-console.log(user[0].chat)
+// console.log(user[0].chat)
  
  await axios.get(`${process.env.URL}/admin/private-chats`,{
   headers:{
@@ -283,10 +309,9 @@ const handleOnlineFriend = (name)=>{
 // handle Offline friend 
 const handleOfflineFriend = (id)=>{
 
-  console.log(id)
+  // console.log(id)
   setReceiver(id) // setting the receivers id 
   setDm((prev)=>!prev) 
-console.log(id)
   getPreviousChats(id)
 }
 
@@ -369,7 +394,7 @@ const leaveGroup = ()=>{
 <Box   bgColor={toggle==true?"gray":"gray"} p={5}  borderRadius={toggle==true?"0px":"10px"} w={["100%" , "90%","auto" , "auto"]}  margin={toggle==true?"block":"auto"} mt={10} >  
 <Heading textAlign={'center'} >Welcome   {info.name} </Heading>
 
-<Flex mt={10} flexDirection={["column" , "row" , "row" , "row"]}  justifyContent={"space-around"} >
+<Flex mt={10} flexDirection={["column" , "row" , "row" , "row"]}  justifyContent={"space-between"} >
 <Button  onClick={()=>{setToggleFriendChat((prev)=>!prev) , setToggleRoomChat(false) , setNewRoom(false) , setToggleActiveMembers(false) ,setToggleActiveRooms(false)}} bgColor={toggleFriendChat?"yellow":"white"}   >Chat with Friends</Button>
  {/* Friends List for mobile view */}
 
@@ -388,8 +413,8 @@ const leaveGroup = ()=>{
  bgColor={toggleActiveMembers?"yellow":"white"} >Online Users</Button>
 
 {/* Online Users for mobile view */}
-{console.log(activeMembers)}
-<Box display={["block" , "none" , "none" ,"none"]}> {(toggleActiveMembers && activeMembers.length-1 > 0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> : toggleActiveMembers ? <Box> <Text mt={2}>No Active Members</Text> </Box>:<> {console.log(activeMembers)} </>
+{/* {console.log(activeMembers)} */}
+<Box display={["block" , "none" , "none" ,"none"]}> {(toggleActiveMembers && activeMembers.length-1 > 0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> : toggleActiveMembers ? <Box> <Text mt={2}>No Active Members</Text> </Box>:<>  </>
 
 }  </Box> 
   
@@ -448,6 +473,8 @@ const leaveGroup = ()=>{
 
 </Box>
 
+{/* ///////////////////////////////////////////////////  Toggle is true ///////////////////////////////////////////////////////////////////// */}
+
 {/* group message */}
  <Box display={toggle==true?"block":"none"} width={toggle==true?"100%":""} h={"90vh"} pos={"relative"}  >
 
@@ -463,20 +490,20 @@ const leaveGroup = ()=>{
 
   {dmtext.length>0 && dmtext.map((el)=>{
 
- return <Box border={"1px solid black"} key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box border={"1px solid black"}  w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={el.name==info.name?"green":"blue"} p={5} borderRadius={"20px"}  ><Text> {el.name==info.name?"You":el.name}</Text> <Text> {el.message}</Text> </Box>  </Box>  
+ return <Box  key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box   w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={el.name==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} > {el.name==info.name?"You":el.name}</Text> <Text> {el.message}</Text> </Box>  </Box>  
 })}
 
   
 </Box>:<Box h={"80vh"} overflow={"scroll"} > {data.length  >0 && data.map((el, ind)=>{
   
-return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={(el.name || el.senderName)==info.name?"green":"blue"} p={5} borderRadius={"20px"}  ><Text> {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> <Text> {el.message}</Text> </Box>  </Box>  
+return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"70%"]} bgColor={(el.name || el.senderName)==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} fontSize={"20px"} > {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> <Text> {el.message}</Text> </Box>  </Box>  
   })}</Box>}
 
 {/* Message Box */} 
 
 <Box backgroundColor={"yellow"} pos={"absolute"}  bottom={0} w={"100%"} p={2} h={"10vh"}  >
   <Flex alignItems={"center"} > 
-  < Input type="text" bgColor={"gray"} value={dm==true?text:message} cursor={"pointer"} color={"white"}  placeholder="enter message" w={"80%"}  onChange={(e)=> dm==true?setText(e.target.value):setMessage(e.target.value)} />
+  <Input type="text" bgColor={"gray"} value={dm==true?text:message} cursor={"pointer"} color={"white"}  placeholder="enter message" w={"80%"}  onChange={(e)=> dm==true?setText(e.target.value):setMessage(e.target.value)} />
   <Button ml={5} onClick={()=>dm==true?handleText(id,text):handleSubmit()}>Message</Button>
   </Flex>
 </Box>

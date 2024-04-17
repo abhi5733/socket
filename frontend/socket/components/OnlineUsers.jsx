@@ -16,8 +16,8 @@ const OnlineUsers = ({toggleActiveMembers , activeMembers , info , friends , set
          friends.push(el.data.name) // saving all active friends in friends array 
           return el
         }  }).map((el)=>{
-        console.log(el)
-          return <Flex mt={2} alignItems={"center"}>
+        // console.log(el)
+          return <Flex key={el._id} mt={2} alignItems={"center"}>
             <Text fontSize={20}>Name : {el.data.name}</Text>
           <Button ml={2} size={"xs"} onClick = {()=>{setDm((prev)=>!prev),setId(el.id),setReceiver(el.data._id), getPreviousChats(el.data._id) , setToggle((prev)=>!prev)}} >Message</Button>
           </Flex>

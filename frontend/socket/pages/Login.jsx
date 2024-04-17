@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import {Link , useNavigate} from "react-router-dom"
-import { Box, useToast  , Text, FormLabel, Button} from '@chakra-ui/react'
+import { Box, useToast  , Text, FormLabel, Button, Input} from '@chakra-ui/react'
 // import 'dotenv/config'
 // require('dotenv').config()
 const Login = () => {
@@ -57,9 +57,9 @@ const navigate = useNavigate()
 <form  onSubmit={handleSubmit} >
 
 <FormLabel fontWeight={"bold"} fontSize={[ "medium" , "medium" , "large" ,   "large"]}  color={"white"}>UserName</FormLabel>
-<input type='text' placeholder='Enter UserName'  style={{width:"90%" , padding:"0 2px"}}  value={state.name} name="name"  onChange={handleChange} /> <br/>
+<Input   bgColor={"white"}   type='text' placeholder='Enter UserName'  width= "90%"  padding={"3px"}  value={state.name} name="name"  onChange={handleChange} /> <br/>
 <FormLabel mt={2} fontWeight={"bold"} fontSize={[ "medium" , "medium" , "large" ,   "large"]}  color={"white"}>Password</FormLabel> 
-<input type='password' placeholder='Enter password'  style={{width:"90%" ,  padding:"0 2px"}}  value={state.password} name="password"  onChange={handleChange} />
+<Input   bgColor={"white"} type='password' placeholder='Enter password'  style={{width:"90%" ,  padding:"0 2px"}}  value={state.password} name="password"  onChange={handleChange} />
 <Button type='submit' mt={2} backgroundColor= "white" color= "black"  _hover ={{backgroundColor:"yellow", color:"black"}}  >Submit</Button>
  <Link to="/" ><Button  mt={2} ml={5} backgroundColor= "white" color= "black"  _hover ={{backgroundColor:"yellow", color:"black"}}  >Sign up</Button> </Link>
 </form>
