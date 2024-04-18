@@ -70,6 +70,7 @@ const friends = []
 
     // Messages
     socket.on( "dm" , (data)=>{
+      console.log(data)
       if(!data.success){
         toast({
           title: `Something went wrong`,
@@ -80,7 +81,7 @@ const friends = []
         })
       }else{
         toast({
-          title: `New message received`,
+          title: `New message received from ${data.name}`,
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -133,7 +134,7 @@ const friends = []
         console.log(data)
         setData((prev)=>[...prev, {message:data.data.message , name : data.data.info.name}])
         toast({
-          title: `New message received`,
+          title: `New message received from ${data.name}`,
           status: 'success',
           duration: 500,
           isClosable: true,
@@ -146,7 +147,7 @@ const friends = []
 
     // Group message sent success to the individual user . 
 
-    socket.on("Room-response" , (data)=>{
+    socket.on("Room-response" , (data )=>{
     
       if(data.success){
         // console.log(data)
@@ -296,7 +297,7 @@ console.log(2)
 
 //  handling online friend 
 const handleOnlineFriend = (name)=>{
-
+console.log("online")
   setReceiverName(name)
    const user = activeMembers.filter((el)=>el.data.name==name) 
 // console.log(user[0].data._id , activeMembers)
@@ -314,6 +315,7 @@ const handleOnlineFriend = (name)=>{
 
 // handle Offline friend 
 const handleOfflineFriend = (id,name)=>{
+  console.log("offline")
 setReceiverName(name)
   // console.log(id)
   setId("") // setting socket id to emty string 
@@ -393,7 +395,9 @@ const leaveGroup = ()=>{
   return (
 
     <Box> 
+{/* active Members helper Function  */}
 
+<HelperOnlineuser activeMembers={activeMembers} info={info} friends={friends} />
 
 <Flex   justifyContent={"center"}   >
 
@@ -405,8 +409,8 @@ const leaveGroup = ()=>{
 <Button  onClick={()=>{setToggleFriendChat((prev)=>!prev) , setToggleRoomChat(false) , setNewRoom(false) , setToggleActiveMembers(false) ,setToggleActiveRooms(false)}} bgColor={toggleFriendChat?"yellow":"white"}   >Chat with Friends</Button>
  {/* Friends List for mobile view */}
 
- <Box  display={["block" , "none" , "none" ,"none"]}  >  { toggleFriendChat &&  ( info.friends.length > 0 ? <Friends info={info} friends={friends} handleOnlineFriend={handleOnlineFriend}  setToggle={setToggle}  handleOfflineFriend={handleOfflineFriend} />:<Text mt={2}>No Friends Yet</Text>)
-
+ <Box  display={["block" , "none" , "none" ,"none"]}  >  { toggleFriendChat &&  ( info.friends.length > 0 ? <Friends info={info} friends={friends} handleOnlineFriend={handleOnlineFriend}  setToggle={setToggle}  handleOfflineFriend={handleOfflineFriend} /> : <Text mt={2}>No Friends Yet</Text>)
+                                                                                                                      
 } </Box> 
 
 <Button ml={[ 0,2,2 ,2]}  mt={[2,0,0,0]} onClick={()=>{setToggleRoomChat((prev)=>!prev), setToggleFriendChat(false) , setToggleActiveMembers(false) , setToggleActiveRooms(false) }} bgColor={toggleRoomChat?"yellow":"white"} >My Room</Button>
@@ -421,8 +425,8 @@ const leaveGroup = ()=>{
 
 {/* Online Users for mobile view */}
 {/* {console.log(activeMembers)} */}
-<Box display={["block" , "none" , "none" ,"none"]}> {(toggleActiveMembers && activeMembers.length-1 > 0 )? <OnlineUsers toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> : toggleActiveMembers ? <Box> <Text mt={2}>No Active Members</Text> </Box>:<>  </>
-
+<Box display={["block" , "none" , "none" ,"none"]}> {(toggleActiveMembers && activeMembers.length-1 > 0 )? <OnlineUsers   setReceiverName={setReceiverName} toggleActiveMembers={toggleActiveMembers} activeMembers={activeMembers} info={info} friends={friends} setDm={setDm} setId={setId} setReceiver={setReceiver} getPreviousChats={getPreviousChats} setToggle={setToggle} /> : toggleActiveMembers ? <Box> <Text mt={2}>No Active Members</Text> </Box>:<>  </>
+                                                                                                                       
 }  </Box> 
   
 <Button ml={[ 0,2,2 ,2]}  mt={[2,0,0,0]}  onClick={getAllRooms} bgColor={toggleActiveRooms?"yellow":"white"} >All Rooms</Button>
@@ -439,9 +443,7 @@ const leaveGroup = ()=>{
 </Flex>
 
 
-{/* active Members helper Function  */}
 
- <HelperOnlineuser activeMembers={activeMembers} info={info} friends={friends} />
 
  {/* Friends List */}
 

@@ -14,6 +14,6 @@ user login :
 
     // things to work on :-
 
-    1 
+    1 :  Mobile responsive = friends even if online , button showing message instead of on-line
 
 s

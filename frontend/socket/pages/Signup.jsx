@@ -4,11 +4,12 @@ import axios  from "axios"
 import { Box , Button, FormLabel, Input, Text , useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import {useForm} from "react-hook-form"
+import Loader from 'react-spinner-loader';
 
 const Signup = () => {
 
   const { register, handleSubmit, formState: { errors }  } = useForm();
-
+  const [loader, setLoader] = useState(false);
   const navigate = useNavigate()
   const toast = useToast()
   const [state,setState] = useState({})
@@ -16,7 +17,7 @@ const Signup = () => {
 
   const onSubmit = async (data)=>{
   
-
+    setLoader(true)
     try{
 
     const data2 =  await axios.post(`${process.env.URL}/user/signup` , data)
@@ -28,9 +29,13 @@ const Signup = () => {
       isClosable: true,
       position: 'top'
     })
+    setLoader(false)
+
     navigate("/login")
     console.log(data2)
     }catch(err){
+
+      setLoader(false)
       err.response.status==400?toast({
         title: 'Something went wrong',
         description: "Please try again later",
@@ -38,7 +43,7 @@ const Signup = () => {
         duration: 2000,
         isClosable: true,
         position: 'top'
-      }):
+      }) :
       toast({
         title: 'Username already Exist',
         description: "Please try with different Username",
@@ -47,6 +52,7 @@ const Signup = () => {
         isClosable: true,
         position: 'top'
       })
+    
     }
   }
 

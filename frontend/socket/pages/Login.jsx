@@ -1,12 +1,14 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import {Link , useNavigate} from "react-router-dom"
-import { Box, useToast  , Text, FormLabel, Button, Input} from '@chakra-ui/react'
+import { Box, useToast  , Text, FormLabel, Button, Input, border} from '@chakra-ui/react'
+import Loader from 'react-spinner-loader';
 // import 'dotenv/config'
 // require('dotenv').config()
 const Login = () => {
 
   const toast = useToast()
+  const [loader, setLoader] = useState(false);
     const [state,setState] = useState({})
 const navigate = useNavigate()
     const handleChange = (e)=>{
@@ -19,7 +21,7 @@ const navigate = useNavigate()
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
-        
+        setLoader(true)
         try{
 
         const data =  await axios.post(`${process.env.URL}/user/login` , state)  
@@ -31,6 +33,7 @@ const navigate = useNavigate()
           isClosable: true,
           position: 'top'
         })
+        setLoader(false)
         // alert("user logged-in succes
         navigate("/home") 
         
@@ -44,15 +47,18 @@ const navigate = useNavigate()
               isClosable: true,
               position: 'top'
             })
+            setLoader(false)
         }
       }
 
   return (
   
     <Box>
-
+      <Box pos={"absolute"} left={"50%"} right={"50%"} top={"50%"} zIndex={100}   > 
+ <Loader show = {loader}/>
+ </Box>
     <Text fontSize={"30px"} textAlign={"center"} fontFamily={"cursive"} mt={"20px"}>Login</Text>
-
+   
 <Box width={["80%","400px","400px","400px"]} margin={"auto"} boxShadow='2xl' borderRadius={"10px"} mt={10} bgColor={"gray"} p={2} > 
 <form  onSubmit={handleSubmit} >
 

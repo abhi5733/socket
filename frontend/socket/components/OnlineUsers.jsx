@@ -19,7 +19,7 @@ const OnlineUsers = ({toggleActiveMembers , activeMembers , info , friends , set
         // console.log(el)
           return <Flex key={el._id} mt={2} alignItems={"center"}>
             <Text fontSize={20}>Name : {el.data.name}</Text>
-          <Button ml={2} size={"xs"} onClick = {()=>{setDm((prev)=>!prev) /*,setId(el.id) */     ,   setReceiverName(el.data.name),  setReceiver(el.data._id), getPreviousChats(el.data._id) , setToggle((prev)=>!prev)}} >Message</Button>
+          <Button ml={2} size={"xs"} bgColor={"green.200"}  onClick = {()=>{setDm(true) /*,setId(el.id) */     ,   setReceiverName(el.data.name),  setReceiver(el.data._id), getPreviousChats(el.data._id) , setToggle(true)}} >Message</Button>
           </Flex>
         })
      } </>

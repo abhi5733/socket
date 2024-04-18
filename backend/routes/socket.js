@@ -17,6 +17,7 @@ const { Server } = require("socket.io")
 //         methods: ["GET", "POST"],
 //         credentials: true
 //     }
+
 // });
 
 
@@ -76,16 +77,18 @@ socket.on("user-connected" , (data)=>{
          })
            await newChat.save()
            const rooms = await userRoomsModel.findOneAndUpdate({ roomName:data.group} , {$push:{chats:newChat._id}} , {new:true}).populate("chats")
-           console.log("emit-response")
+        //    console.log(rooms,"rooms")
     
  
-        socket.to(data.group).emit("message",{success:true,  data , rooms})
-              socket.emit("Room-response" , { success:true } )
+        socket.to(data.group).emit("message",{success:true,  data , rooms , name:data.info.name})
+        socket.emit("Room-response" , { success:true  })
+
    // pushing chat id in room  model 
 
         
         console.log(rooms)
    }catch(err){
+    socket.emit("Room-response" , { success:false } )
 console.log(err)
    }
 
@@ -118,6 +121,8 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
         const text =  await chatModel.findByIdAndUpdate(users[0].chat , { $push: { chats: {message:data.text , sender:data.user._id , name:data.user.name }} } , {new:true ,   session } )
   
         socket.to(data.id).emit("dm" ,{text:data.text,id:data.user._id,name:data.user.name , success:true})
+        socket.emit("Room-response" , { success:true ,name:data.user.name } ) // reusing room-response method  instead of creating new One
+        
     }else{
      // if new friends           
         const text = new chatModel({chats:[{sender:data.user._id, message:data.text , name:data.user.name}]})
@@ -130,7 +135,7 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
         await user.save({ session})
         await user2.save({ session})
         socket.to(data.id).emit("dm" ,{text:data.text,id:data.user._id,name:data.user.name ,success:true})
-        
+        socket.emit("Room-response" , { success:true ,name:data.user.name } )
     }
 
 }else{ // if offline
@@ -140,7 +145,7 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
         const users = user.friends.filter(friend => friend.id === data.user._id)
         
                 const text =  await chatModel.findByIdAndUpdate(users[0].chat , { $push: { chats: {message:data.text , sender:data.user._id , name:data.user.name }} } , {new:true ,   session } )
-          
+                socket.emit("Room-response" , { success:true , name:data.user.name } )
                 // socket.emit("dm" ,{text:data.text,id:data.user._id,name:data.user.name , success:true})
             }else{
              // if new friends           
@@ -154,10 +159,8 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
                 await user.save({ session})
                 await user2.save({ session})
                 // socket.emit("dm" ,{text:data.text,id:data.user._id,name:data.user.name ,success:true})
-                
+                socket.emit("Room-response" , { success:true , name:data.user.name } )
             }
-        
-
 
 }
 
@@ -171,7 +174,7 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
     await session.abortTransaction();
     session.endSession();
     console.error(err);
-    socket.emit("dm" ,{success:false,err})
+    socket.emit("Room-response" , { success:false } )
 
 
 }
