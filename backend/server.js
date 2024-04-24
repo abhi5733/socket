@@ -19,7 +19,7 @@ const server = createServer(app)
 app.use(express.json())
 require("dotenv").config()
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://socket-ergd.vercel.app',
     methods: ['GET', 'POST'],
     credentials: true
 }));
