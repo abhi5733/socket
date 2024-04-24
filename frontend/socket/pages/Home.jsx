@@ -250,7 +250,7 @@ console.log(result,"result")
   socket.emit("dm" , ({id,text:result.data.url,user:info,receiver}))
   setDmtext((prev)=>[...prev,{message:result.data.url,receiver:info.name,name:info.name}])
 
- }{
+ }else{
   toast({
     title: "File not sent",
     description: "Try again later" ,
