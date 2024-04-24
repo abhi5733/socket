@@ -140,7 +140,7 @@ adminRouter.post('/uploadResume',  upload.single('resume'), async (req, res) => 
   res.send(cloud);
 
    }catch(err){
-    res.send(err)
+    res.status(404).send(err)
    }
 
   });

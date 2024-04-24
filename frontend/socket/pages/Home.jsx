@@ -249,8 +249,9 @@ console.log(result,"result")
  if(result!==null && result.data!==""){
   socket.emit("dm" , ({id,text:result.data.url,user:info,receiver}))
   setDmtext((prev)=>[...prev,{message:result.data.url,receiver:info.name,name:info.name}])
-
- }else{
+ 
+ }
+}else{
   toast({
     title: "File not sent",
     description: "Try again later" ,
@@ -263,8 +264,8 @@ console.log(result,"result")
 
 }
 
-
-    }else{
+    
+    else{
       toast({
         description: "Enter some text first",
         status: 'error',
@@ -274,9 +275,11 @@ console.log(result,"result")
       })
     
     }
-
-
+  
 }
+}
+
+
 
 
 ////////////////////////////////////////////////////////////////////  group messages    /////////////////////////////////////////////////////////////////////////////////
@@ -294,6 +297,7 @@ const handleSubmit = async ()=>{
     }else if(file!==""){
       // console.log(file,"file")
 
+      try{
    const result =  await  handleFileSubmit()
    console.log(result,"result")
    if(result!==null && result.data!==""){
@@ -313,7 +317,10 @@ const handleSubmit = async ()=>{
     })
 
    }
-    }
+    
+  }catch(err){
+    res.status(404).send(err)
+  }
 }else{
   alert("Type some message")
 }
