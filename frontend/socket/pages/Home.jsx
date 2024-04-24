@@ -245,11 +245,20 @@ let data ;
 }else if(file!==""){
 
  const result = await handleFileSubmit()
-
- if(result!==null){
+console.log(result,"result")
+ if(result!==null && result.data!==""){
   socket.emit("dm" , ({id,text:result.data.url,user:info,receiver}))
   setDmtext((prev)=>[...prev,{message:result.data.url,receiver:info.name,name:info.name}])
 
+ }{
+  toast({
+    title: "File not sent",
+    description: "Try again later" ,
+    status: 'error',
+    position:"top",
+    duration: 2000,
+    isClosable: true,
+  })
  }
 
 }
@@ -286,12 +295,23 @@ const handleSubmit = async ()=>{
       // console.log(file,"file")
 
    const result =  await  handleFileSubmit()
-   console.log(result)
-   if(result!==null){
+   console.log(result,"result")
+   if(result!==null && result.data!==""){
 
    socket.emit("message" , ({message: result.data.url , group, info }))
    setData((prev)=>[...prev, {message: result.data.url, name:info.name}])
   
+   }else{
+
+    toast({
+      title: "File not sent",
+      description: "Try again later" ,
+      status: 'error',
+      position:"top",
+      duration: 2000,
+      isClosable: true,
+    })
+
    }
     }
 }else{
@@ -322,23 +342,6 @@ const handleFileSubmit = async () => {
     console.log('File uploaded successfully:', response);
     return response
 
-    dm==true?setDmtext((prev)=>[...prev,{message:response.data.url,receiver:info.name,name:info.name}]):setData((prev)=>[...prev, {message:response.data.url, name:info.name}])
-    // setMoreData(response.data)
-    setFile("")
-    // setUploadResume(false)
-    response.data.url.includes("pdf")?  toast({
-      description: "File posted successfully",
-      status: 'success',
-      position:"top",
-      duration: 2000,
-      isClosable: true,
-    }) : toast({
-      description: "Image posted successfully",
-      status: 'success',
-      position:"top",
-      duration: 2000,
-      isClosable: true,
-    }) 
   } catch (error) {
     console.error('Error uploading file:', error);
   
