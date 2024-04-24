@@ -637,10 +637,10 @@ const leaveGroup = ()=>{
 
   
 </Box>:<Box h={"80vh"} overflow={"scroll"} > {data.length  >0 && data.map((el, ind)=>{
-  
+  let link = el.message.replace("http://", "https://")
 return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"70%"]} bgColor={(el.name || el.senderName)==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} fontSize={"20px"} > {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> 
 
-{el.message.includes("cloudinary")?el.message.includes("pdf")?  <iframe  src={el.message.replace("http://", "https://")} width={"100%"} height="80%" frameborder="0"></iframe>  :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>}</Box>  </Box>  
+{el.message.includes("cloudinary")?el.message.includes("pdf")?  <iframe  src={link} width={"100%"} height="80%" frameborder="0"></iframe>  :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>}</Box>  </Box>  
   })}</Box>}
   
 
