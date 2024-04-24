@@ -18,7 +18,11 @@ let activeUsers = []  // storing all active users
 const server = createServer(app)
 app.use(express.json())
 require("dotenv").config()
-app.use(cors())
+app.use(cors({
+    origin: 'https://socket-ergd.vercel.app',
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 app.use("/user" , userRouter)
 app.use(authentication) 
 app.use("/admin" , adminRouter)
