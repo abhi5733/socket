@@ -108,8 +108,13 @@ console.log(data,"data")
 
         const user = await userModel.findById(data.receiver)
         const user2 = await userModel.findById(data.user._id)
-     
+
+        if(data.text.includes(http)){
+    data.text = el.message.replace("http://", "https://")
+        }
+        
         // if online 
+
 
         if(data.id!==""){
             console.log("online")
