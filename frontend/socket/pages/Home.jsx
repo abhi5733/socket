@@ -247,8 +247,8 @@ if(text!==""){
  const result = await handleFileSubmit()
 console.log(result,"result")
  if(result!==null && result.data!==""){
-  socket.emit("dm" , ({id,text:result.data.url,user:info,receiver}))
-  setDmtext((prev)=>[...prev,{message:result.data.url,receiver:info.name,name:info.name}])
+  socket.emit("dm" , ({id,text:result.data.secure_url  ,user:info,receiver}))
+  setDmtext((prev)=>[...prev,{message:result.data.secure_url ,receiver:info.name,name:info.name}])
  
  }
 }else{
@@ -302,8 +302,8 @@ const handleSubmit = async ()=>{
    console.log(result,"result")
    if(result!==null && result.data!==""){
 
-   socket.emit("message" , ({message: result.data.url , group, info }))
-   setData((prev)=>[...prev, {message: result.data.url, name:info.name}])
+   socket.emit("message" , ({message: result.data.secure_url    , group, info }))
+   setData((prev)=>[...prev, {message: result.data.secure_url    , name:info.name}])
   
    }else{
 
@@ -629,18 +629,18 @@ const leaveGroup = ()=>{
 
 
   {dmtext.length>0 && dmtext.map((el)=>{
-  let link = el.message.replace("http://", "https://")
+  
  return <Box  key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box   w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={el.name==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} > {el.name==info.name?"You":el.name}</Text> 
 
-   {el.message.includes("cloudinary")?el.message.includes("pdf")? <iframe  src={link} width={"100%"} height="80%" frameborder="0"></iframe> :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>} </Box>  </Box>  
+   {el.message.includes("cloudinary")?el.message.includes("pdf")? <iframe  src={el.message} width={"100%"} height="80%" frameborder="0"></iframe> :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>} </Box>  </Box>  
 })}
 
   
 </Box>:<Box h={"80vh"} overflow={"scroll"} > {data.length  >0 && data.map((el, ind)=>{
-  let link = el.message.replace("http://", "https://")
+
 return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"70%"]} bgColor={(el.name || el.senderName)==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} fontSize={"20px"} > {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> 
 
-{el.message.includes("cloudinary")?el.message.includes("pdf")?  <iframe  src={link} width={"100%"} height="80%" frameborder="0"></iframe>  :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>}</Box>  </Box>  
+{el.message.includes("cloudinary")?el.message.includes("pdf")?  <iframe  src={el.message} width={"100%"} height="80%" frameborder="0"></iframe>  :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>}</Box>  </Box>  
   })}</Box>}
   
 
