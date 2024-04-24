@@ -125,6 +125,8 @@ adminRouter.post("/join-room" , async (req,res)=>{
 adminRouter.post('/uploadResume',  upload.single('resume'), async (req, res) => {
     // Handle file upload
 
+    try{
+  
     const { filename, path } = req.file;
     console.log(req.headers.userid)
     // Save file metadata to database
@@ -135,23 +137,11 @@ adminRouter.post('/uploadResume',  upload.single('resume'), async (req, res) => 
 //    deleting the file from system
    deleteFile(path)
 
-//    const user = await userDataModel.find({userID:req.headers.userid})
-
-//    if(user.length>0){
-
-//     user[0].resume = cloud.url 
-//   await user[0].save()
-//   res.send(user[0]);
-//    }else{
-
-//     const data = new userDataModel({resume:cloud.url,
-//       userID 
-//       :req.headers.userid
-//   })
-
-//   await data.save()
   res.send(cloud);
-//    }
+
+   }catch(err){
+    res.send(err)
+   }
 
   });
 
