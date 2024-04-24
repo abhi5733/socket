@@ -12,24 +12,24 @@ const { Server } = require("socket.io")
     // const io = new Server(server);
     
 
-// const io = new Server(server, {
-//     cors: {
-//         origin: "http://localhost:5173",
-//         methods: ["GET", "POST"],
-//         credentials: true
-//     }
-
-// });
-
-
-
 const io = new Server(server, {
     cors: {
-        origin: "https://socket-ergd.vercel.app",
+        origin: "http://localhost:5173",
         methods: ["GET", "POST"],
         credentials: true
     }
+
 });
+
+
+
+// const io = new Server(server, {
+//     cors: {
+//         origin: "https://socket-ergd.vercel.app",
+//         methods: ["GET", "POST"],
+//         credentials: true
+//     }
+// });
 
 
 
@@ -112,7 +112,7 @@ console.log(data,"data")
         // if online 
 
         if(data.id!==""){
-
+            console.log("online")
 
     // if already friends 
     if(user.friends.some(friend => friend.id === data.user._id)){
@@ -140,7 +140,7 @@ const users = user.friends.filter(friend => friend.id === data.user._id)
     }
 
 }else{ // if offline
-
+console.log("offline")
     // if already friends 
     if(user.friends.some(friend => friend.id === data.user._id)){
         const users = user.friends.filter(friend => friend.id === data.user._id)
