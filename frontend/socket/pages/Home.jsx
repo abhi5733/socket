@@ -632,7 +632,7 @@ const leaveGroup = ()=>{
   
  return <Box  key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box   w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={el.name==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} > {el.name==info.name?"You":el.name}</Text> 
 
-   {el.message.includes("cloudinary")?el.message.includes("pdf")? <iframe  src={el.message} width={"100%"} height="80%" frameborder="0"></iframe> :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>} </Box>  </Box>  
+   {el.message.includes("cloudinary")?el.message.includes("pdf")? <iframe  type="application/pdf" src={el.message} width={"100%"} height="80%" frameborder="0"></iframe> :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>} </Box>  </Box>  
 })}
 
   
@@ -640,7 +640,7 @@ const leaveGroup = ()=>{
 
 return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"70%"]} bgColor={(el.name || el.senderName)==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} fontSize={"20px"} > {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> 
 
-{el.message.includes("cloudinary")?el.message.includes("pdf")?  <iframe  src={el.message} width={"100%"} height="80%" frameborder="0"></iframe>  :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>}</Box>  </Box>  
+{el.message.includes("cloudinary")?el.message.includes("pdf")?  <iframe type="application/pdf" src={el.message} width={"100%"} height="80%" frameborder="0"></iframe>  :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>}</Box>  </Box>  
   })}</Box>}
   
 
