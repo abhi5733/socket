@@ -277,7 +277,7 @@ console.log(result,"result")
     }
   
 }
-}
+
 
 
 
@@ -323,6 +323,7 @@ const handleSubmit = async ()=>{
   }
 }else{
   alert("Type some message")
+}
 }
 }
 
@@ -677,5 +678,6 @@ return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} 
   
   )
 }
+
 
 export default Home
