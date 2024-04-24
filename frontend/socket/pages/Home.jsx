@@ -247,6 +247,7 @@ if(text!==""){
  const result = await handleFileSubmit()
 console.log(result,"result")
  if(result!==null && result.data!==""){
+  console.log(result.data.secure_url , "url")
   socket.emit("dm" , ({id,text:result.data.secure_url  ,user:info,receiver}))
   setDmtext((prev)=>[...prev,{message:result.data.secure_url ,receiver:info.name,name:info.name}])
  
