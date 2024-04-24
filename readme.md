@@ -14,6 +14,6 @@ user login :
 
     // things to work on :-
 
-    1 :  Mobile responsive = friends even if online , button showing message instead of on-line
+    1 :  working on handleSubmit function 
 
 s

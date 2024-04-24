@@ -17,6 +17,7 @@ const app = express()
 let activeUsers = []  // storing all active users 
 const server = createServer(app)
 app.use(express.json())
+require("dotenv").config()
 app.use(cors())
 app.use("/user" , userRouter)
 app.use(authentication) 

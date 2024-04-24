@@ -4,11 +4,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import {io}  from "socket.io-client"
 import { Link } from 'react-router-dom'
 import {useSelector,useDispatch} from "react-redux"
-import { Box, Button, Flex, Heading , Input, Text , useToast } from '@chakra-ui/react'
+import { Box, Button, Flex, FormLabel, Heading , Input, TagLabel, Text , useToast , Image ,Avatar} from '@chakra-ui/react'
 import Friends from '../components/Friends'
 import MyRooms from '../components/MyRooms'
 import OnlineUsers from '../components/OnlineUsers'
 import HelperOnlineuser from '../components/HelperOnlineuser'
+import { IoDocumentAttachOutline } from "react-icons/io5";
 
 
 const Home = () => {
@@ -39,6 +40,7 @@ const[toggleActiveMembers,setToggleActiveMembers] = useState(false)
 const[toggleActiveRooms,setToggleActiveRooms] = useState(false)
 const[allRooms , setAllRooms] = useState([])
 const[receiverName,setReceiverName] = useState("")
+const[file,setFile] = useState("")
 const friends = []
 
 
@@ -158,6 +160,7 @@ const friends = []
         isClosable: true,
         position: 'top'
       })
+      setFile("")
       setMessage("")
       }else{
 
@@ -212,10 +215,23 @@ const friends = []
 
   },[])
 
+/////////////////////////////////////////////// handleFileChange //////////////////////////////////////////////////////
+
+const handleFileChange = (e) => {
+  console.log(e.target.files[0])
+  setFile(e.target.files[0]);
+};
+
+
+
 
   ////////////////////////////////// personnal messgaes
-  const handleText = (text)=>{
-console.log(activeMembers)
+  const handleText = async (text)=>{
+
+    if(text!=="" || file!==""){
+
+if(text!==""){
+// console.log(activeMembers)
 let data ; 
   activeMembers.length>0?data = activeMembers.filter((el)=>el.data.name==receiverName):""
   let id = data.length>0?data[0].id : "" 
@@ -225,17 +241,121 @@ let data ;
     setDmtext((prev)=>[...prev,{message:text,receiver:info.name,name:info.name}])
   //   console.log(dmtext)
   setText("")
+
+}else if(file!==""){
+
+ const result = await handleFileSubmit()
+
+ if(result!==null){
+  socket.emit("dm" , ({id,text:result.data.url,user:info,receiver}))
+  setDmtext((prev)=>[...prev,{message:result.data.url,receiver:info.name,name:info.name}])
+
+ }
+
 }
 
 
-///////////////////////////////// group messages 
-const handleSubmit = ()=>{ 
+    }else{
+      toast({
+        description: "Enter some text first",
+        status: 'error',
+        position:"top",
+        duration: 2000,
+        isClosable: true,
+      })
+    
+    }
 
-  // console.log(message,group , info)
+
+}
+
+
+////////////////////////////////////////////////////////////////////  group messages    /////////////////////////////////////////////////////////////////////////////////
+
+const handleSubmit = async ()=>{ 
+
+  if(message!=="" || file!==""){
+
+    if(message!==""){
+
+  console.log(message,group , info,"message")
   socket.emit("message" , ({message,group, info }))
   setData((prev)=>[...prev, {message, name:info.name}])
 // console.log(data)
+    }else if(file!==""){
+      // console.log(file,"file")
+
+   const result =  await  handleFileSubmit()
+   console.log(result)
+   if(result!==null){
+
+   socket.emit("message" , ({message: result.data.url , group, info }))
+   setData((prev)=>[...prev, {message: result.data.url, name:info.name}])
+  
+   }
+    }
+}else{
+  alert("Type some message")
 }
+}
+
+
+////////////////////////////////////////////////////////////////  handle file submit ///////////////////////////////
+
+
+const handleFileSubmit = async () => {
+  // e.preventDefault();
+
+ 
+  const formData = new FormData();
+  formData.append('resume', file);
+  // formData.Userid = data._id
+  // console.log(formData)
+  try {
+    const response = await axios.post(`${process.env.URL}/admin/uploadResume`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        auth : localStorage.getItem("token"),
+        "Userid" : data._id
+      }
+    });
+    console.log('File uploaded successfully:', response);
+    return response
+
+    dm==true?setDmtext((prev)=>[...prev,{message:response.data.url,receiver:info.name,name:info.name}]):setData((prev)=>[...prev, {message:response.data.url, name:info.name}])
+    // setMoreData(response.data)
+    setFile("")
+    // setUploadResume(false)
+    response.data.url.includes("pdf")?  toast({
+      description: "File posted successfully",
+      status: 'success',
+      position:"top",
+      duration: 2000,
+      isClosable: true,
+    }) : toast({
+      description: "Image posted successfully",
+      status: 'success',
+      position:"top",
+      duration: 2000,
+      isClosable: true,
+    }) 
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  
+
+  toast({
+    description: "Choose you file for upload first",
+    status: 'error',
+    position:"top",
+    duration: 2000,
+    isClosable: true,
+  })
+  return null
+
+}
+}
+
+
 
 
 const handleSpecialCase = ()=>{
@@ -499,21 +619,41 @@ const leaveGroup = ()=>{
 
   {dmtext.length>0 && dmtext.map((el)=>{
 
- return <Box  key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box   w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={el.name==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} > {el.name==info.name?"You":el.name}</Text> <Text> {el.message}</Text> </Box>  </Box>  
+ return <Box  key={el._id} ml={el.name==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box   w={[ "100%" , "70%" , "60%" ,"50%"]} bgColor={el.name==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} > {el.name==info.name?"You":el.name}</Text> 
+ {
+ console.log(el.message) }
+   {el.message.includes("cloudinary")?el.message.includes("pdf")? <iframe  src={el.message} width={"100%"} height="80%" frameborder="0"></iframe> :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>} </Box>  </Box>  
 })}
 
   
 </Box>:<Box h={"80vh"} overflow={"scroll"} > {data.length  >0 && data.map((el, ind)=>{
   
-return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"70%"]} bgColor={(el.name || el.senderName)==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} fontSize={"20px"} > {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> <Text> {el.message}</Text> </Box>  </Box>  
+return  <Box key={el._id} ml={(el.name || el.senderName)==info.name?"50%":"0%"} justifySelf={"end"}  w={"50%"} padding={2} > <Box  w={[ "100%" , "70%" , "60%" ,"70%"]} bgColor={(el.name || el.senderName)==info.name?"green.300":"blue.200"} p={5} borderRadius={"20px"}  ><Text fontWeight={"bold"} fontSize={"20px"} > {(el.name || el.senderName)==info.name?"You":(el.name || el.senderName)}</Text> 
+ {/* {
+ console.log(el.message) } */}
+{el.message.includes("cloudinary")?el.message.includes("pdf")? <iframe  src={el.message} width={"100%"} height="80%" frameborder="0"></iframe> :<Image src={el.message} alt="Image Deleted" />:<Text> {el.message}</Text>}</Box>  </Box>  
   })}</Box>}
 
 {/* Message Box */} 
 
-<Box backgroundColor={"yellow"} pos={"absolute"}  bottom={0} w={"100%"} p={2} h={"10vh"}  >
-  <Flex alignItems={"center"} > 
-  <Input type="text" bgColor={"gray"} value={dm==true?text:message} cursor={"pointer"} color={"white"}  placeholder="enter message" w={"80%"}  onChange={(e)=> dm==true?setText(e.target.value):setMessage(e.target.value)} />
-  <Button ml={5} onClick={()=>dm==true?handleText(text):handleSubmit()}>Message</Button>
+<Box backgroundColor={"yellow"} pos={"absolute"}  bottom={0} w={"100%"} p={2}  border={"1px solid black"} >
+  <Flex  justifyContent={"space-evenly"}   > 
+  <Input type="text" bgColor={"gray"} value={dm==true?text:message} cursor={"pointer"} backgroundColor={"white"} minW={"200px"} placeholder="enter message" w={"80%"}  onChange={(e)=> dm==true?setText(e.target.value):setMessage(e.target.value)} />
+  {/* <form > */}
+  {/* onSubmit={handleSubmit} */}
+  <FormLabel  ml={"5px"} display= "inline-block" cursor= "pointer" p={"5px"} borderRadius={"5px"}  backgroundColor={file!==""?"green.200":"white"}   >
+    {/* file */}
+    <IoDocumentAttachOutline style={{ fontSize:"30px"}} />
+    
+  <Input id="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png" onChange={handleFileChange} style={{ display: "none" }} />
+</FormLabel>
+
+  
+
+    
+      {/* <Button type="submit">Upload Resume</Button> */}
+      {/* </form> */}
+  <Button ml={["2px",5,5,5]} size={["sm","md" , "md" , "md"]} onClick={()=>dm==true?handleText(text):handleSubmit()}>{message!=="" || dm!==""?"Message":file!==""?"Upload":"Message"}</Button>
   </Flex>
 </Box>
 

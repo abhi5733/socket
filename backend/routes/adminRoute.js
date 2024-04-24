@@ -5,6 +5,10 @@ const adminRouter = express.Router()
 // const {userRooms} = require("../model/Rooms")
 const { chatModel } = require("../model/chat")
 const  {userModel}  = require("../model/userModel")
+const { upload } = require("../middleware/multer")
+const fs = require('fs');
+const path = require('path');
+const { uploadonCloudinary } = require("../cloudinary")
 
 adminRouter.get("/myData" , async (req,res)=>{
 
@@ -109,6 +113,65 @@ adminRouter.post("/join-room" , async (req,res)=>{
     }
 
  })
+
+
+
+
+ ////////////////////////////////////////////////////  Uploading Resume ///////////////////////////////////////////////////////////////
+
+
+// uploading resume 
+
+adminRouter.post('/uploadResume',  upload.single('resume'), async (req, res) => {
+    // Handle file upload
+
+    const { filename, path } = req.file;
+    console.log(req.headers.userid)
+    // Save file metadata to database
+    // For MongoDB integration, use Mongoose or any other MongoDB driver
+   const cloud = await  uploadonCloudinary(path)
+   console.log(cloud,"hello")
+  
+//    deleting the file from system
+   deleteFile(path)
+
+//    const user = await userDataModel.find({userID:req.headers.userid})
+
+//    if(user.length>0){
+
+//     user[0].resume = cloud.url 
+//   await user[0].save()
+//   res.send(user[0]);
+//    }else{
+
+//     const data = new userDataModel({resume:cloud.url,
+//       userID 
+//       :req.headers.userid
+//   })
+
+//   await data.save()
+  res.send(cloud);
+//    }
+
+  });
+
+
+  //////////////////////////////////////////////////  Delete file Path  ///////////////////////////////////////////////////////////////
+
+  
+const deleteFile = (filePath) => {
+    // Construct the full path to the file
+    const fullPath = path.join(filePath);
+  
+    // Check if the file exists
+    if (fs.existsSync(fullPath)) {
+      // Delete the file
+      fs.unlinkSync(fullPath);
+      console.log(`File ${filePath} deleted successfully.`);
+    } else {
+      console.log(`File ${filePath} does not exist.`);
+    }
+  };
 
 
 
